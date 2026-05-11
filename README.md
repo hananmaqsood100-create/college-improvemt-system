@@ -20,17 +20,28 @@ Built with Flask + MySQL for transparent communication between students and admi
 ### 📁 Project Structure
 
 
+
+
+
 college-improvemt-system/
-├── app.py            
-├── templates/       
-│   ├── :login.html
+├── http://app.py
+├── templates/
+│   ├── http://login.html
 │   ├── student_dashboard.html
 │   └── admin_dashboard.html
-├── static/            
-│   ├── css/style.css
-│   └── js/script.js
-├── database.sql        
-└── README.md          
+├── static/
+│   ├── css/
+│   │   └── http://style.css
+│   └── js/
+│       └── http://script.js
+├── http://database.sql
+└── http://README.md
+
+
+
+
+
+
 
 
 
