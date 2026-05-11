@@ -21,16 +21,16 @@ Built with Flask + MySQL for transparent communication between students and admi
 
 
 college-improvemt-system/
-├── http://app.py            
+├── app.py            
 ├── templates/       
-│   ├── http://login.html
+│   ├── :login.html
 │   ├── student_dashboard.html
 │   └── admin_dashboard.html
 ├── static/            
 │   ├── css/style.css
 │   └── js/script.js
-├── http://database.sql        
-└── http://README.md          
+├── database.sql        
+└── README.md          
 
 
 
