@@ -19,7 +19,22 @@ Built with Flask + MySQL for transparent communication between students and admi
 
 ### 📁 Project Structure
 
-### 🔧 Setup Instructions
+
+college-improvemt-system/
+├── http://app.py            
+├── templates/       
+│   ├── http://login.html
+│   ├── student_dashboard.html
+│   └── admin_dashboard.html
+├── static/            
+│   ├── css/style.css
+│   └── js/script.js
+├── http://database.sql        
+└── http://README.md          
+
+
+
+🔧 Setup Instructions
 1. Clone: `git clone https://github.com/hananmaqsood100-create/college-improvemt-system.git`
 2. Install: `pip install flask mysql-connector-python`
 3. Setup DB: Import `database.sql` into MySQL
