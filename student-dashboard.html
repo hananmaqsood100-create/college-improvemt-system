@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Feedback - Campus Feedback System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-brand">
+      <h2><i class="fas fa-comment"></i> Campus Feedback</h2>
+    </div>
+    <div class="navbar-menu">
+      <a href="fyp.html" class="nav-link">Home</a>
+      <a href="faq.html" class="nav-link">FAQ</a>
+      <a href="student-dashboard.html" class="nav-link active">My Feedback</a>
+      <div id="loggedInMenu" class="nav-user-menu" style="display: none;">
+        <span class="user-email" id="userEmailDisplay"></span>
+        <a href="feedback.html" class="nav-link btn-feedback">
+          <i class="fas fa-pen"></i> New Feedback
+        </a>
+        <button onclick="logout()" class="nav-link btn-logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+      <div id="notLoggedInMenu" class="nav-auth-menu">
+        <a href="login.html" class="nav-link btn-login">Login</a>
+        <a href="register.html" class="nav-link btn-register">Register</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="dashboard-section">
+  <div class="container">
+    <h1>My Feedback Dashboard</h1>
+    <p>View all your submitted feedback</p>
+    <div class="student-stats">
+      <div class="stat-card">
+        <i class="fas fa-pen-fancy"></i>
+        <h3 id="myFeedbackCount">0</h3>
+        <p>Feedback Submitted</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-star"></i>
+        <h3 id="myAverageRating">0</h3>
+        <p>Average Rating</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-check-circle"></i>
+        <h3 id="myResolvedCount">0</h3>
+        <p>Resolved</p>
+      </div>
+    </div>
+    <div class="feedback-table-container">
+      <h2>Your Feedback History</h2>
+      <div id="myFeedbackList" class="feedback-list">
+        <p class="no-feedback">No feedback submitted yet. <a href="feedback.html">Submit one now</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4><i class="fas fa-info-circle"></i> About Us</h4>
+        <p>Campus Feedback System helps students voice their concerns and suggestions for continuous improvement.</p>
+      </div>
+      <div class="footer-section">
+        <h4><i class="fas fa-link"></i> Quick Links</h4>
+        <ul>
+          <li><a href="fyp.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+          <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+          <li><a href="student-dashboard.html"><i class="fas fa-chart-bar"></i> My Feedback</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4><i class="fas fa-envelope"></i> Contact Us</h4>
+        <p><i class="fas fa-envelope"></i> feedback@pgcm.edu.pk</p>
+        <p><i class="fas fa-phone"></i> +92-123-4567890</p>
+        <p><i class="fas fa-map-marker-alt"></i> Punjab Group of Colleges, Muridke</p>
+      </div>
+      <div class="footer-section">
+        <h4><i class="fas fa-share-alt"></i> Follow Us</h4>
+        <div class="social-links">
+          <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Campus Feedback System | Punjab Group of Colleges Muridke | All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    checkUserLoginStatus();
+    loadMyFeedback();
+  });
+
+  function showFeedbackDetail(id) {
+    fetch('http://127.0.0.1:5000/feedback/' + id + '/replies')
+    .then(r => r.json())
+    .then(replies => {
+        const div = document.getElementById('replies_' + id);
+        if (!div) return;
+        if (replies.length === 0) {
+            div.innerHTML = '<p style="color:#999; font-size:13px;">No replies yet.</p>';
+            return;
+        }
+        div.innerHTML = replies.map(r =>
+            '<div style="background:#f0f0f0; padding:8px 12px; border-radius:6px; margin-top:5px; border-left:3px solid #6c63ff;">' +
+            '<b style="color:#6c63ff;">' + r.admin_email + ':</b> ' + r.message +
+            '<br><small style="color:#999;">' + r.responded_at + '</small>' +
+            '</div>'
+        ).join('');
+    });
+}
+
+  async function loadMyFeedback() {
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentUser) { window.location.href = 'login.html'; return; }
+
+    const userId = JSON.parse(currentUser).id;
+    const response = await fetch('http://127.0.0.1:5000/feedback/user/' + userId);
+    const myFeedback = await response.json();
+
+    document.getElementById('myFeedbackCount').textContent = myFeedback.length;
+
+    if (myFeedback.length > 0) {
+      const avgRating = (myFeedback.reduce((sum, f) => sum + parseInt(f.rating), 0) / myFeedback.length).toFixed(1);
+      document.getElementById('myAverageRating').textContent = avgRating;
+    }
+
+    const feedbackList = document.getElementById('myFeedbackList');
+    if (myFeedback.length === 0) {
+      feedbackList.innerHTML = '<p class="no-feedback">No feedback submitted yet. <a href="feedback.html">Submit one now</a></p>';
+      return;
+    }
+
+    let html = '';
+    myFeedback.forEach(function(f) {
+      const title = (f.title || f.category || '').replace(/'/g, '');
+      const category = (f.category || '').replace(/'/g, '');
+      const message = (f.message || '').replace(/'/g, '');
+      const status = f.status || '';
+      const date = f.submitted_at || '';
+      const rating = parseInt(f.rating) || 0;
+      const stars = Array(rating).fill('\u2605').join('') + Array(5-rating).fill('\u2606').join('');
+      
+      html += '<div class="feedback-card" style="border:1px solid #ddd; padding:15px; margin:10px 0; border-radius:8px; cursor:pointer;" onclick="showFeedbackDetail(' + f.id + ')">';
+
+      html += '<div class="feedback-header">';
+      html += '<h3>' + (f.title || f.category) + '</h3>';
+      html += '<span style="background:#6c63ff; color:white; padding:3px 8px; border-radius:4px;">' + f.status + '</span>';
+      html += '</div>';
+      html += '<div class="feedback-body">';
+      html += '<p>' + (f.message || '') + '</p>';
+      html += '<span style="color:#f5a623; font-size:18px;">' + stars + '</span>';
+      html += '</div>';
+      html += '<small>Submitted: ' + f.submitted_at + '</small>';
+      html += '<div id="replies_' + f.id + '" style="margin-top:8px;"></div>';
+html += '<button onclick="showFeedbackDetail(' + f.id + ')" style="margin-top:5px; padding:3px 10px; background:#6c63ff; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">View Replies</button>';
+ '</div>';
+    });
+    feedbackList.innerHTML = html;
+  }
+</script>
+</body>
+</html>

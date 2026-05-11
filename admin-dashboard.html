@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Campus Feedback System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-brand">
+      <h2><i class="fas fa-comment"></i> Campus Feedback</h2>
+    </div>
+    <div class="navbar-menu">
+      <a href="fyp.html" class="nav-link">Home</a>
+      <a href="admin-dashboard.html" class="nav-link active">Dashboard</a>
+      <a href="faq.html" class="nav-link">FAQ</a>
+      
+      <div id="loggedInMenu" class="nav-user-menu" style="display: none;">
+        <span class="user-email" id="userEmailDisplay"></span>
+        <span class="admin-badge">ADMIN</span>
+        <button onclick="logout()" class="nav-link btn-logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ ADMIN DASHBOARD ============ -->
+<section class="dashboard-section">
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <p>Campus Feedback Analytics & Management</p>
+
+    <!-- ✅ NEW: Admin Statistics -->
+    <div class="admin-stats">
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <h3 id="totalUsers">0</h3>
+        <p>Total Users</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-comments"></i>
+        <h3 id="totalFeedback">0</h3>
+        <p>Total Feedback</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-star"></i>
+        <h3 id="averageRating">0</h3>
+        <p>Average Rating</p>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-check-circle"></i>
+        <h3 id="resolvedCount">0</h3>
+        <p>Resolved</p>
+      </div>
+    </div>
+
+    <!-- ✅ NEW: Charts -->
+     
+    <div class="charts-container">
+      <div class="chart-box">
+        <h3>Feedback by Category</h3>
+        <canvas id="categoryChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Rating Distribution</h3>
+        <canvas id="ratingChart"></canvas>
+      </div>
+      <div class="chart-box">
+          <h3>Feedback Trend
+            <span style="float:right; font-size:13px;">
+              <button onclick="setTrendFilter('week')" id="btnWeek"
+                style="padding:3px 10px; background:#6c63ff; color:white; border:none; border-radius:4px; cursor:pointer;">
+                7 Days
+              </button>
+              <button onclick="setTrendFilter('month')" id="btnMonth"
+                style="padding:3px 10px; background:#ddd; color:#333; border:none; border-radius:4px; cursor:pointer; margin-left:5px;">
+                30 Days
+              </button>
+            </span>
+          </h3>
+          <canvas id="trendChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ✅ NEW: All Feedback Table -->
+    <div class="feedback-table-container">
+      <h2>All Feedback</h2>
+      <div class="table-controls">
+        <input type="text" id="searchInput" placeholder="Search feedback..." class="search-input">
+        <select id="categoryFilter" class="filter-select">
+          <option value="">All Categories</option>
+          <option value="academic">academic</option>
+          <option value="infrastructure">Infrastructure</option>
+          <option value="facilities">Facilities</option>
+          <option value="administration">Administration</option>
+          <option value="services">services</option>
+        </select>
+        <input type="date" id="fromDate" class="filter-select" title="From Date">
+<input type="date" id="toDate" class="filter-select" title="To Date">
+<button onclick="applyDateFilter()" style="padding:8px 16px; background:#6c63ff; color:white; border:none; border-radius:6px; cursor:pointer;">🔍 Filter</button>
+<button onclick="clearDateFilter()" style="padding:8px 16px; background:#aaa; color:white; border:none; border-radius:6px; cursor:pointer;">✕ Clear</button>
+
+
+      </div>
+      <!-- Export Buttons -->
+<div style="margin-bottom: 15px; display: flex; gap: 10px;">
+  <button onclick="exportCSV()" style="padding: 8px 18px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+    ⬇ Export CSV
+  </button>
+  <button onclick="exportPDF()" style="padding: 8px 18px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+    ⬇ Export PDF
+  </button>
+</div>
+      <div id="allFeedbackList" class="feedback-list">
+        <p>Loading feedback...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      
+      <!-- ✅ SECTION 1: About Us -->
+      <div class="footer-section">
+        <h4><i class="fas fa-info-circle"></i> About Us</h4>
+        <p>Campus Feedback System helps students voice their concerns and suggestions for continuous improvement.</p>
+      </div>
+
+      <!-- ✅ SECTION 2: Quick Links -->
+      <div class="footer-section">
+        <h4><i class="fas fa-link"></i> Quick Links</h4>
+        <ul>
+          <li><a href="fyp.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+          <li><a href="feedback.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+          <li><a href="chatbot.html"><i class="fas fa-chart-bar"></i> My Feedback</a></li>
+        </ul>
+      </div>
+
+      <!-- ✅ SECTION 3: Contact Info -->
+      <div class="footer-section">
+        <h4><i class="fas fa-envelope"></i> Contact Us</h4>
+        <p><i class="fas fa-envelope"></i> feedback@pgcm.edu.pk</p>
+        <p><i class="fas fa-phone"></i> +92-123-4567890</p>
+        <p><i class="fas fa-map-marker-alt"></i> Punjab Group of Colleges, Muridke</p>
+      </div>
+
+      <!-- ✅ SECTION 4: Social Links -->
+      <div class="footer-section">
+        <h4><i class="fas fa-share-alt"></i> Follow Us</h4>
+        <div class="social-links">
+          <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ✅ FOOTER BOTTOM -->
+    <div class="footer-bottom">
+      <p>&copy; 2026 Campus Feedback System | Punjab Group of Colleges Muridke | All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    checkUserLoginStatus();
+    checkAdminAccess();
+  });
+
+  function checkAdminAccess() {
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+    const user = JSON.parse(currentUser);
+    if (user.role !== 'admin') {
+      alert('Access Denied! Only admins can view this page.');
+      window.location.href = 'fyp.html';
+      return;
+    }
+    loadAdminDashboard();
+  }
+    let allFeedbacksCache = [];
+    let categoryChartInstance = null;
+    let ratingChartInstance = null;
+  async function loadAdminDashboard(fromDate = '', toDate = '') {
+    let url = 'http://127.0.0.1:5000/feedback/all';
+    const params = [];
+    if (fromDate) params.push('from_date=' + fromDate);
+    if (toDate)   params.push('to_date='   + toDate);
+    if (params.length) url += '?' + params.join('&');
+
+    const response = await fetch(url);
+    const feedbacks = await response.json();
+    allFeedbacksCache = feedbacks;
+    document.getElementById('totalFeedback').textContent = feedbacks.length;
+    fetch('http://127.0.0.1:5000/users/count')
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('totalUsers').textContent = data.count || 0;
+    });
+    const resolved = feedbacks.filter(f => f.status === 'resolved').length;
+    document.getElementById('resolvedCount').textContent = resolved;
+
+    if (feedbacks.length > 0) {
+      const avg = (feedbacks.reduce((sum, f) => sum + (parseInt(f.rating) || 0), 0) / feedbacks.length).toFixed(1);
+      document.getElementById('averageRating').textContent = avg;
+    }
+
+    displayAllFeedback(feedbacks);
+    initializeCharts(feedbacks);
+  }
+
+  function displayAllFeedback(feedbacks) {
+    const list = document.getElementById('allFeedbackList');
+    if (feedbacks.length === 0) {
+      list.innerHTML = '<p class="no-feedback">No feedback received yet.</p>';
+      return;
+    }
+
+    let html = '';
+    feedbacks.forEach(function(f) {
+      const stars = Array(parseInt(f.rating) || 0).fill('\u2605').join('') + Array(5 - (parseInt(f.rating) || 0)).fill('\u2606').join('');
+      html += '<div class="feedback-card" style="border:1px solid #ddd; padding:15px; margin:10px 0; border-radius:8px;">';
+      html += '<div class="feedback-header">';
+      html += '<h3>' + (f.title || f.category) + '</h3>';
+      html += '<span style="background:#6c63ff; color:white; padding:3px 8px; border-radius:4px;">' + f.status + '</span>';
+      html += '</div>';
+      html += '<p><b>Category:</b> ' + f.category + '</p>';
+      html += '<p>' + (f.message || '') + '</p>';
+      html += '<span style="color:#f5a623; font-size:18px;">' + stars + '</span>';
+      html += '<br><small>Submitted: ' + f.submitted_at + '</small>';
+      html += '<br><button onclick="updateStatus(' + f.id + ', \'resolved\')" style="margin-top:8px; padding:5px 15px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">Mark Resolved</button>';
+html += '<div style="margin-top:10px;">';
+html += '<input id="reply_' + f.id + '" type="text" placeholder="Write reply..." style="padding:5px; width:70%; border:1px solid #ddd; border-radius:4px;">';
+html += '<button onclick="sendReply(' + f.id + ')" style="padding:5px 10px; background:#6c63ff; color:white; border:none; border-radius:4px; cursor:pointer; margin-left:5px;">Send Reply</button>';
+html += '</div>';
+html += '<div id="replies_' + f.id + '" style="margin-top:8px; font-size:13px; color:#555;"></div>';
+html += '</div>';
+    });
+    list.innerHTML = html;
+  }
+
+  async function updateStatus(id, status) {
+    await fetch('http://127.0.0.1:5000/feedback/' + id + '/status', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: status })
+    });
+    loadAdminDashboard();
+  }
+async function sendReply(feedbackId) {
+    const input = document.getElementById('reply_' + feedbackId);
+    const message = input.value.trim();
+    if (!message) { alert('Reply likhein!'); return; }
+    const currentUserStr = localStorage.getItem('currentUser');
+if (!currentUserStr) { alert('Please login again!'); return; }
+const currentUser = JSON.parse(currentUserStr);
+    await fetch('http://127.0.0.1:5000/feedback/' + feedbackId + '/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_id: currentUser.id, message: message })
+    });
+    input.value = '';
+    loadReplies(feedbackId);
+}
+
+async function loadReplies(feedbackId) {
+    const response = await fetch('http://127.0.0.1:5000/feedback/' + feedbackId + '/replies');
+    const replies = await response.json();
+    const div = document.getElementById('replies_' + feedbackId);
+    if (replies.length === 0) { div.innerHTML = ''; return; }
+    div.innerHTML = replies.map(r =>
+        '<div style="background:#f0f0f0; padding:5px 10px; border-radius:4px; margin-top:5px;">' +
+        '<b>' + r.admin_email + ':</b> ' + r.message +
+        '<small style="float:right; color:#999;">' + r.responded_at + '</small>' +
+        '</div>'
+    ).join('');
+}
+  function initializeCharts(feedbacks) {
+    const categoryData = {};
+    feedbacks.forEach(f => {
+      categoryData[f.category] = (categoryData[f.category] || 0) + 1;
+    });
+
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+if (categoryChartInstance) categoryChartInstance.destroy();
+categoryChartInstance = new Chart(categoryCtx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(categoryData),
+        datasets: [{ data: Object.values(categoryData), backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#4facfe'] }]
+      }
+    });
+
+    const ratingData = [0, 0, 0, 0, 0];
+    feedbacks.forEach(f => { if (f.rating) ratingData[parseInt(f.rating) - 1]++; });
+
+    const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+if (ratingChartInstance) ratingChartInstance.destroy();
+ratingChartInstance = new Chart(ratingCtx, {
+      type: 'bar',
+      data: {
+        labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+        datasets: [{ label: 'Count', data: ratingData, backgroundColor: '#667eea' }]
+      }
+    });
+    // ===== TREND CHART =====
+    window.currentTrendFilter = window.currentTrendFilter || 'week';
+    window.lastFeedbacksForTrend = feedbacks;
+    renderTrendChart(feedbacks, window.currentTrendFilter);
+    // ===== END TREND CHART =====
+  }
+  function renderTrendChart(feedbacks, filter) {
+    const today = new Date();
+    const days  = filter === 'month' ? 30 : 7;
+    const labels = [], dates = [];
+
+    for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        dates.push(d.toISOString().slice(0, 10));
+        labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+    }
+
+    const counts = dates.map(dateStr =>
+        feedbacks.filter(f => (f.submitted_at || '').slice(0, 10) === dateStr).length
+    );
+
+    const trendCtx = document.getElementById('trendChart').getContext('2d');
+    if (window.trendChartInstance) window.trendChartInstance.destroy();
+    window.trendChartInstance = new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Feedbacks',
+                data: counts,
+                borderColor: '#6c63ff',
+                backgroundColor: 'rgba(108, 99, 255, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#6c63ff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' feedback(s)' } }
+            },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    document.getElementById('btnWeek').style.background  = filter === 'week'  ? '#6c63ff' : '#ddd';
+    document.getElementById('btnWeek').style.color       = filter === 'week'  ? 'white'   : '#333';
+    document.getElementById('btnMonth').style.background = filter === 'month' ? '#6c63ff' : '#ddd';
+    document.getElementById('btnMonth').style.color      = filter === 'month' ? 'white'   : '#333';
+}
+
+function setTrendFilter(filter) {
+    window.currentTrendFilter = filter;
+    renderTrendChart(window.lastFeedbacksForTrend, filter);
+}
+  // ===== SEARCH & FILTER =====
+function applyFilters() {
+    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    const category = document.getElementById('categoryFilter').value.toLowerCase();
+
+    const filtered = allFeedbacksCache.filter(function(f) {
+        const text = [f.name || '', f.email || '', f.message || '', f.category || ''].join(' ').toLowerCase();
+        const matchSearch = !searchTerm || text.includes(searchTerm);
+        const matchCategory = !category || (f.category || '').toLowerCase() === category;
+        return matchSearch && matchCategory;
+    });
+
+    displayAllFeedback(filtered);
+}
+
+// Event listeners
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+// ===== DATE FILTER =====
+async function applyDateFilter() {
+    const fromDate = document.getElementById('fromDate').value;
+    const toDate   = document.getElementById('toDate').value;
+    if (fromDate && toDate && fromDate > toDate) {
+        alert('From Date, To Date se pehle honi chahiye!');
+        return;
+    }
+    await loadAdminDashboard(fromDate, toDate);
+}
+
+async function clearDateFilter() {
+    document.getElementById('fromDate').value = '';
+    document.getElementById('toDate').value   = '';
+    await loadAdminDashboard();
+}
+// ===== END DATE FILTER =====
+// ===== CSV EXPORT =====
+function exportCSV() {
+  const data = allFeedbacksCache;
+  if (!data || data.length === 0) { alert('Koi feedback nahi hai!'); return; }
+
+  const headers = ['ID', 'Title', 'Category', 'Message', 'Rating', 'Status', 'Submitted At'];
+  const rows = data.map(f => [
+    f.id,
+    '"' + (f.title    || '').replace(/"/g, '""') + '"',
+    '"' + (f.category || '').replace(/"/g, '""') + '"',
+    '"' + (f.message  || '').replace(/"/g, '""') + '"',
+    f.rating || '',
+    f.status || '',
+    '"' + (f.submitted_at || '').replace(/"/g, '""') + '"'
+  ]);
+
+  const csv  = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'feedbacks_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ===== PDF EXPORT =====
+function exportPDF() {
+  const data = allFeedbacksCache;
+  if (!data || data.length === 0) { alert('Koi feedback nahi hai!'); return; }
+
+  const win = window.open('', '_blank');
+  let rows = '';
+  data.forEach(function(f) {
+    const stars = '★'.repeat(parseInt(f.rating)||0) + '☆'.repeat(5-(parseInt(f.rating)||0));
+    rows += `<tr>
+      <td>${f.id}</td>
+      <td>${f.title||''}</td>
+      <td>${f.category||''}</td>
+      <td>${f.message||''}</td>
+      <td>${stars}</td>
+      <td style="background:${f.status==='resolved'?'#28a745':'#ffc107'};color:${f.status==='resolved'?'white':'black'};padding:2px 8px;border-radius:4px;">${f.status||'pending'}</td>
+      <td>${f.submitted_at||''}</td>
+    </tr>`;
+  });
+
+  win.document.write(`<!DOCTYPE html><html><head><title>Feedback Report</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:20px;color:#333}
+    h1{color:#6c63ff;border-bottom:2px solid #6c63ff;padding-bottom:8px}
+    .meta{font-size:13px;color:#666;margin-bottom:20px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{background:#6c63ff;color:white;padding:10px 8px;text-align:left}
+    td{padding:8px;border-bottom:1px solid #eee;vertical-align:top}
+    tr:nth-child(even){background:#f9f9f9}
+  </style></head><body>
+  <h1>Campus Feedback Report</h1>
+  <div class="meta">Generated: ${new Date().toLocaleString()} | Total: ${data.length} feedbacks</div>
+  <table>
+    <thead><tr><th>#</th><th>Title</th><th>Category</th><th>Message</th><th>Rating</th><th>Status</th><th>Submitted At</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`);
+  win.document.close();
+}
+// ===== END EXPORT =====
+</script>
+</body>
+</html>

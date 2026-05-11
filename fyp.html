@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Feedback & Improvement System - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+     <nav class="navbar">
+  <div class="container">
+    <div class="navbar-brand">
+      <h2><i class="fas fa-comment"></i> Campus Feedback</h2>
+    </div>
+    <div class="navbar-menu">
+      <a href="fyp.html" class="nav-link active">Home</a>
+      
+      <!-- LOGGED IN USER -->
+      <div id="loggedInMenu" class="nav-user-menu" style="display: none;">
+        <span class="user-email" id="userEmailDisplay"></span>
+        <a href="student-dashboard.html" class="nav-link" id="myFeedbackLink">
+  <i class="fas fa-list"></i> My Feedback
+</a>
+<a href="admin-dashboard.html" class="nav-link" id="adminDashLink" style="display:none;">
+  <i class="fas fa-cog"></i> Admin Dashboard
+</a>
+        
+        <button onclick="logout()" class="nav-link btn-logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+ 
+      <!-- NOT LOGGED IN USER -->
+      <div id="notLoggedInMenu" class="nav-auth-menu">
+        <a href="login.html" class="nav-link btn-login">Login</a>
+        <a href="register.html" class="nav-link btn-register">Register</a>
+        <li class="nav-item"><a class="nav-link" href="feedback.html">Submit Feedback</a></li>
+        <a href="faq.html" class="nav-link">FAQ</a>
+      <a href="chatbot.html" class="nav-link">Chat Bot</a>
+      
+ 
+ 
+      </div>
+    </div>
+  </div>
+</nav>
+ 
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Your Voice Matters</h1>
+                    <p class="lead mb-4">Share your feedback anonymously and help us improve our campus services, infrastructure, and policies.</p>
+                    <div class="d-flex gap-3">
+                        <!-- ✅ CHANGE 3: یہ button login check کرے گا -->
+  <button id="feedbackBtnHero" onclick="checkLoginAndRedirect('feedback.html')" class="btn btn-primary">
+    <i class="fas fa-pen"></i> Submit Feedback
+  </button>
+  <a href="register.html" class="btn btn-secondary">
+    <i class="fas fa-user-plus"></i> Create Account
+  </a>
+ 
+                       <a href="faq.html" class="btn btn-outline-primary btn-lg"><i class="fas fa-question-circle"></i> View FAQ</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://via.placeholder.com/500x400?text=Feedback+System" alt="Feedback" class="img-fluid rounded-lg shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+ 
+    <!-- Features Section -->
+    <section class="features-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Key Features</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>100% Anonymous</h4>
+                        <p>Submit feedback without revealing your identity</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h4>Real-time Analytics</h4>
+                        <p>View feedback statistics and trends instantly</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>AI Chatbot</h4>
+                        <p>Get instant answers from our support chatbot</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Mobile Friendly</h4>
+                        <p>Access from any device, anytime, anywhere</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- How It Works Section -->
+    <section class="how-it-works py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">How It Works</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h4>Create Account</h4>
+                        <p>Sign up with your college email</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h4>Fill Form</h4>
+                          <!-- ✅ CHANGE 4: یہ button بھی login check کرے گا -->
+  <button onclick="checkLoginAndRedirect('feedback.html')" class="step-btn">
+    Give Feedback →
+  </button>
+ 
+ 
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h4>Submit</h4>
+                        <p>Submit anonymously</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h4>See Changes</h4>
+                        <p>Watch as improvements are made</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- Call to Action -->
+            <!-- ✅ ADD: Admin/Student Dashboard Link -->
+<section class="cta">
+  <div class="container">
+    <h2>Ready to Make a Difference?</h2>
+    <p>Join thousands of students improving our campus together</p>
+    
+    <div class="cta-buttons">
+      <a href="register.html" class="btn btn-primary btn-large">
+        <i class="fas fa-user-plus"></i> Register Now
+      </a>
+      <a href="login.html" class="btn btn-secondary btn-large">
+        <i class="fas fa-sign-in-alt"></i> Already Registered?
+      </a>
+      <!-- ✅ NEW: Dashboard Link -->
+      <a href="#" onclick="checkRoleAndRedirect()" class="btn btn-info btn-large">
+        <i class="fas fa-chart-bar"></i> View Dashboard
+      </a>
+    </div>
+  </div>
+</section>
+    <!-- LOGIN MODEL for Popup-->
+<div id="loginModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeLoginModal()">&times;</span>
+    <h2>Login Required</h2>
+    <p>You need to login first to submit feedback.</p>
+    <div class="modal-buttons">
+      <a href="login.html" class="btn btn-primary">Login</a>
+      <a href="register.html" class="btn btn-secondary">Create Account</a>
+ 
+ 
+    </div>
+  </div>
+</div>
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      
+      <!-- ✅ SECTION 1: About Us -->
+      <div class="footer-section">
+        <h4><i class="fas fa-info-circle"></i> About Us</h4>
+        <p>Campus Feedback System helps students voice their concerns and suggestions for continuous improvement.</p>
+      </div>
+ 
+      <!-- ✅ SECTION 2: Quick Links -->
+      <div class="footer-section">
+        <h4><i class="fas fa-link"></i> Quick Links</h4>
+        <ul>
+          <li><a href="Register.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
+          <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+          <li><a href="student-dashboard.html"><i class="fas fa-chart-bar"></i> My Feedback</a></li>
+        </ul>
+      </div>
+ 
+      <!-- ✅ SECTION 3: Contact Info -->
+      <div class="footer-section">
+        <h4><i class="fas fa-envelope"></i> Contact Us</h4>
+        <p><i class="fas fa-envelope"></i> feedback@pgcm.edu.pk</p>
+        <p><i class="fas fa-phone"></i> +92-123-4567890</p>
+        <p><i class="fas fa-map-marker-alt"></i> Punjab Group of Colleges, Muridke</p>
+      </div>
+ 
+      <!-- ✅ SECTION 4: Social Links -->
+      <div class="footer-section">
+        <h4><i class="fas fa-share-alt"></i> Follow Us</h4>
+        <div class="social-links">
+          <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+ 
+    </div>
+ 
+    <!-- ✅ FOOTER BOTTOM -->
+    <div class="footer-bottom">
+      <p>&copy; 2026 Campus Feedback System | Punjab Group of Colleges Muridke | All Rights Reserved</p>
+    </div>
+  </div>
+</footer>
+ 
+ 
+    <!-- ✅ CHANGE 5: یہ modal popup ہے جو show/hide ہوتا ہے -->
+<div id="loginModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeLoginModal()">&times;</span>
+    <h2>Login Required</h2>
+    <p>You need to login first to submit feedback.</p>
+    <div class="modal-buttons">
+      <a href="login.html" class="btn btn-primary">Login</a>
+      <a href="register.html" class="btn btn-secondary">Create Account</a>
+    </div>
+  </div>
+</div>
+ 
+ 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+ 
+
+
+
+
