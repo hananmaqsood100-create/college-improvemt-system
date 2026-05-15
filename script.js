@@ -477,7 +477,7 @@ if (!emailRegex.test(email)) {
 
   if (isValid) {
     // SAVE USER DATA TO localStorage
-    fetch('http://127.0.0.1:5000/register', {
+    fetch('/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -598,7 +598,7 @@ if (userObj.role === 'admin') {
     try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         
-        const response = await fetch('http://127.0.0.1:5000/feedback', {
+        const response = await fetch('/feedback', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -744,7 +744,7 @@ let isValid = true;
 if (!email) isValid = false;
 if (!password) isValid = false;
   if (isValid) {
-    fetch('http://127.0.0.1:5000/login', {
+    fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

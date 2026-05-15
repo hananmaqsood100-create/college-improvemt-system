@@ -16,7 +16,7 @@ with app.app_context():
     print("✅ Database tables ban gayi!")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, host='0.0.0.0')
 
 from flask import Flask, send_from_directory
 import os
