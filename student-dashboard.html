@@ -111,7 +111,7 @@
   });
 
   function showFeedbackDetail(id) {
-    fetch('http://127.0.0.1:5000/feedback/' + id + '/replies')
+    fetch('https://hanan056.pythonanywhere.com/feedback/' + id + '/replies')
     .then(r => r.json())
     .then(replies => {
         const div = document.getElementById('replies_' + id);
@@ -134,7 +134,7 @@
     if (!currentUser) { window.location.href = 'login.html'; return; }
 
     const userId = JSON.parse(currentUser).id;
-    const response = await fetch('http://127.0.0.1:5000/feedback/user/' + userId);
+    const response = await fetch('https://hanan056.pythonanywhere.com/feedback/user/' + userId);
     const myFeedback = await response.json();
 
     document.getElementById('myFeedbackCount').textContent = myFeedback.length;

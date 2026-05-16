@@ -23,7 +23,7 @@ import os
 
 @app.route('/')
 def index():
-    return send_from_directory('..', 'index.html')
+    return send_from_directory('..', 'fyp.html')
 
 @app.route('/<path:filename>')
 def serve_frontend(filename):

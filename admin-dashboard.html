@@ -201,7 +201,7 @@
     let categoryChartInstance = null;
     let ratingChartInstance = null;
   async function loadAdminDashboard(fromDate = '', toDate = '') {
-    let url = 'http://127.0.0.1:5000/feedback/all';
+    let url = 'https://hanan056.pythonanywhere.com/feedback/all';
     const params = [];
     if (fromDate) params.push('from_date=' + fromDate);
     if (toDate)   params.push('to_date='   + toDate);
@@ -211,7 +211,7 @@
     const feedbacks = await response.json();
     allFeedbacksCache = feedbacks;
     document.getElementById('totalFeedback').textContent = feedbacks.length;
-    fetch('http://127.0.0.1:5000/users/count')
+    fetch('https://hanan056.pythonanywhere.com/users/count')
     .then(r => r.json())
     .then(data => {
         document.getElementById('totalUsers').textContent = data.count || 0;
@@ -259,7 +259,7 @@ html += '</div>';
   }
 
   async function updateStatus(id, status) {
-    await fetch('http://127.0.0.1:5000/feedback/' + id + '/status', {
+    await fetch('https://hanan056.pythonanywhere.com/feedback/' + id + '/status', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: status })
@@ -273,7 +273,7 @@ async function sendReply(feedbackId) {
     const currentUserStr = localStorage.getItem('currentUser');
 if (!currentUserStr) { alert('Please login again!'); return; }
 const currentUser = JSON.parse(currentUserStr);
-    await fetch('http://127.0.0.1:5000/feedback/' + feedbackId + '/reply', {
+    await fetch('https://hanan056.pythonanywhere.com/feedback/' + feedbackId + '/reply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ admin_id: currentUser.id, message: message })
@@ -283,7 +283,7 @@ const currentUser = JSON.parse(currentUserStr);
 }
 
 async function loadReplies(feedbackId) {
-    const response = await fetch('http://127.0.0.1:5000/feedback/' + feedbackId + '/replies');
+    const response = await fetch('https://hanan056.pythonanywhere.com/feedback/' + feedbackId + '/replies');
     const replies = await response.json();
     const div = document.getElementById('replies_' + feedbackId);
     if (replies.length === 0) { div.innerHTML = ''; return; }
